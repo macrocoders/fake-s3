@@ -535,13 +535,14 @@ module FakeS3
 
 
   class Server
-    def initialize(address, port, store, hostname, ssl_cert_path, ssl_key_path, extra_options={})
+    def initialize(address, port, store, hostname, ssl_cert_path, ssl_key_path, daemonize, extra_options={})
       @address = address
       @port = port
       @store = store
       @hostname = hostname
       @ssl_cert_path = ssl_cert_path
       @ssl_key_path = ssl_key_path
+      @daemonize = daemonize || false
       webrick_config = {
         :BindAddress => @address,
         :Port => @port
@@ -562,6 +563,8 @@ module FakeS3
           :AccessLog => []
         )
       end
+
+      WEBrick::Daemon.start if @daemonize
 
       @server = WEBrick::HTTPServer.new(webrick_config)
     end

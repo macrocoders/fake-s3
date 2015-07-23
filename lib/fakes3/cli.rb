@@ -15,6 +15,7 @@ module FakeS3
     method_option :limit, :aliases => '-l', :type => :string, :desc => 'Rate limit for serving (ie. 50K, 1.0M)'
     method_option :sslcert, :type => :string, :desc => 'Path to SSL certificate'
     method_option :sslkey, :type => :string, :desc => 'Path to SSL certificate key'
+    method_option :daemonize, :type => :boolean, :aliases => '-d', :required => false, :desc => 'Daemonize the server process. Defaults to false.'
 
     def server
       store = nil
@@ -48,13 +49,14 @@ module FakeS3
       address = options[:address]
       ssl_cert_path = options[:sslcert]
       ssl_key_path = options[:sslkey]
+      daemonize = options[:daemonize] || false
 
       if (ssl_cert_path.nil? && !ssl_key_path.nil?) || (!ssl_cert_path.nil? && ssl_key_path.nil?)
         abort "If you specify an SSL certificate you must also specify an SSL certificate key"
       end
 
       puts "Loading FakeS3 with #{root} on port #{options[:port]} with hostname #{hostname}" unless options[:quiet]
-      server = FakeS3::Server.new(address,options[:port],store,hostname,ssl_cert_path,ssl_key_path, quiet: !!options[:quiet])
+      server = FakeS3::Server.new(address,options[:port],store,hostname,ssl_cert_path,ssl_key_path,daemonize, quiet: !!options[:quiet])
       server.serve
     end
 
