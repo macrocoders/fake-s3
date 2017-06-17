@@ -536,7 +536,7 @@ module FakeS3
 
 
   class Server
-    def initialize(address, port, store, hostname, ssl_cert_path, ssl_key_path, daemonize=false,log=nil extra_options={})
+    def initialize(address, port, store, hostname, ssl_cert_path, ssl_key_path, daemonize=false,log=nil, extra_options={})
       @address = address
       @port = port
       @store = store
